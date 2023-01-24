@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-
+// const User = require('../models/User');
 const Student = require('../models/Student');
 
 /* CREAT STUDENT PROFILE */ 
@@ -29,7 +29,6 @@ exports.update = async (req, res) => {
 
  exports.delete = async (req, res) => {
     const _id = ObjectId(req.params.id)
- 
     const student = await Student.deleteOne({ _id })
     res.json({ notice: " Student  deleted successfully"})
  }
