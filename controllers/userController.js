@@ -1,6 +1,40 @@
 const { ObjectId } = require('mongodb');
 const Post = require('../models/Post');
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
+const saltRounds = 10;
+
+  /* CREAT USER */ 
+exports.signup = async (req, res) => {
+    const password = await bcrypt.hash(req.body.password, saltRounds);
+    const data = { ...req.body, password }
+    const user = await User.create(data)
+    res.json({ user })
+}
+
+// LIST USERS
+exports.users = async (req, res) => {
+    const user = await User.find();
+    const data = { ...req.body, password }
+    res.json({ data })
+}
+
+//LOGIN
+exports.login = async (req, res) => {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+        res.json({ data: 'user not found' })
+        return
+    }
+    if (! await bcrypt.compare(req.body.password, user.password)) {
+        res.json({ data: 'user not found' })
+        return
+    }
+
+    const token = jwt.sign({ user}, 'fake-jwt-token')
+    res.json({ user, access_token: token })
+}
 
 /* LIST USERS */
 
@@ -9,17 +43,13 @@ exports.index = async (req, res) => {
     res.json(courses)
    }
 
-  /* CREAT USER */ 
-exports.create = async (req, res) => {
-    await User.create(req.body)
-    res.json(req.body)
-    }
-
    /* GET USER POSTS PROFILE */ 
-exports.UserPosts = async (req, res) => {
-    const _id = req.params.id
+exports.show = async (req, res) => {
+    const _id = req.body.id
     const user_id = await User.find({_id})
-    const userPost = await Post.findOne({ author: user_id})
+    console.log(_id);
+    const userPost = await Post.find({ author: user_id})
+    // const post = await Post.find().populate('author');
     res.json(userPost)
    }
  

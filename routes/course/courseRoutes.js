@@ -3,16 +3,14 @@ const couserControllers = require('../../controllers/courseController')
 
 const courseRouter = express.Router()
 
-bookRouter
+courseRouter
 .route('/')
-.get(bookControllers.index)
-.post(bookControllers.create)
+.get(couserControllers.index)
+.post(couserControllers.create)
 
 
-bookRouter
-.route('/book/:id')
-.get(bookControllers.show)
-.patch(bookControllers.update)
-.delete(bookControllers.delete)
+courseRouter
+.route('/course/:id')
+.get(couserControllers.show)
 
-module.exports = bookRouter;
+module.exports = courseRouter;

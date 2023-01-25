@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { ObjectId } = require('mongodb');
 const Post = require('../models/Post');
 
@@ -10,8 +11,12 @@ exports.index = async (req, res) => {
 
 /* CREAT POST PROFILE */ 
 exports.create = async (req, res) => {
-    await Post.create(req.body)
-    res.json(req.body)
+    const post = req.body
+    if(!mongoose.Types.ObjectId.isValid(post.author.trim())) {
+       res.json({error: "author invalid, author must exist..."})
+    }
+   const newPost = await Post.create(post)
+    res.json(newPost)
     }
 
 /* SHOW POST PROFILE */ 
